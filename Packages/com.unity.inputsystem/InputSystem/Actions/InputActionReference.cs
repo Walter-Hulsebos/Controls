@@ -1,5 +1,8 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using Unity.Mathematics;
+using static System.Runtime.CompilerServices.MethodImplOptions;
 
 ////REVIEW: Can we somehow make this a simple struct? The one problem we have is that we can't put struct instances as sub-assets into
 ////        the import (i.e. InputActionImporter can't do AddObjectToAsset with them). However, maybe there's a way around that. The thing
@@ -65,6 +68,9 @@ namespace UnityEngine.InputSystem
                 return m_Action;
             }
         }
+
+        public void Enable()  => action.Enable();
+        public void Disable() => action.Disable();
 
         /// <summary>
         /// Initialize the reference to refer to the given action.
@@ -182,6 +188,13 @@ namespace UnityEngine.InputSystem
         {
             return reference?.action;
         }
+        
+        [MethodImpl(AggressiveInlining)]
+        public static implicit operator float (in InputActionReference self) => self.action.ReadValue<float>();
+        [MethodImpl(AggressiveInlining)]
+        public static implicit operator float2(in InputActionReference self) => self.action.ReadValue<Vector2>();
+        [MethodImpl(AggressiveInlining)]
+        public static implicit operator float3(in InputActionReference self) => self.action.ReadValue<Vector3>();
 
         /// <summary>
         /// Create a new InputActionReference object that references the given action.

@@ -1,9 +1,12 @@
 using System;
+using System.Runtime.CompilerServices;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Mathematics;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.Serialization;
+using static System.Runtime.CompilerServices.MethodImplOptions;
 
 ////TODO: add way to retrieve the binding correspond to a control
 
@@ -20,7 +23,7 @@ using UnityEngine.Serialization;
 ////        it opaque what the choices actually entail and by giving no way out if the choices for one reason or another don't work out
 ////        perfectly.
 ////
-////        My impression is that at least two the following two checkboxes would make sense:
+////        My impression is that at least two the fofllowing two checkboxes would make sense:
 ////        1) Initial State Check? Whether the action should immediately sync to the current state of controls when enabled.
 ////        2) Resolve Conflicting Inputs? Whether the action should try to resolve conflicts between multiple concurrent inputs.
 ////
@@ -757,6 +760,18 @@ namespace UnityEngine.InputSystem
             m_ActionMap?.m_State?.Dispose();
         }
 
+        #region Operators
+        
+        //public static implicit operator bool (InputAction self) => self.ReadValueAsButton();
+        [MethodImpl(AggressiveInlining)]
+        public static implicit operator float (in InputAction self) => self.ReadValue<float>();
+        [MethodImpl(AggressiveInlining)]
+        public static implicit operator float2(in InputAction self) => self.ReadValue<Vector2>();
+        [MethodImpl(AggressiveInlining)]
+        public static implicit operator float3(in InputAction self) => self.ReadValue<Vector3>();
+            
+        #endregion
+        
         /// <summary>
         /// Return a string version of the action. Mainly useful for debugging.
         /// </summary>
